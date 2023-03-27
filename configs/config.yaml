@@ -1,0 +1,26 @@
+data_path: ./datasets
+num_classes: 31
+lr: 0.01
+approach: dann_module # source_module, dann_module
+
+# Optim parameters
+epochs: 20
+batch_size: 5
+
+gpu:
+  nb_gpus: 1
+  strategy:
+
+# Logging parameters
+wandb:
+  project: dom_adapt
+  name: run1 # use for W&B run name and for the checkpoint name
+
+device: cpu
+
+# Other parameters
+shuffle: True
+source_domain: amazon
+target_domain: dslr
+nb_wokers: 4
+check: False
