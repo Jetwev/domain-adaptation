@@ -8,3 +8,8 @@ This is a link to the Google Drive folder that contains articles associated with
 
 > **Research articles:** https://drive.google.com/drive/u/1/folders/1wQjbBhaMuRVnk9fXvBA3B-jS_4YgJhJy
 
+Some parts of the code are based on:
+
+1. https://github.com/NaJaeMin92/pytorch_DANN/tree/f05afb3d0d6fd6f15627037ba95fceab49be28cd
+2. https://github.com/NaJaeMin92/FixBi
+3. https://github.com/AurelienGauffre/simple-lightning-template
