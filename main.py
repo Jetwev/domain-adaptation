@@ -10,6 +10,7 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 
 from datamodule.datasets import ConcatDataset, get_dataloaders, get_datasets
 from models.dann_module import DannModule
+from models.fixbi_module import FixbiModule
 from models.source_module import SourceOnly
 from utils.utils import get_image
 
@@ -66,8 +67,7 @@ if __name__ == '__main__':
         strategy=params.gpu.strategy,
         callbacks=[
             LearningRateMonitor(logging_interval="epoch"),
-            TQDMProgressBar(refresh_rate=20),
-            model_checkpoint_callback],
+            TQDMProgressBar(refresh_rate=20)],
         logger=wandb_logger
     )
 
@@ -76,12 +76,18 @@ if __name__ == '__main__':
 
         trainer.fit(model=model, train_dataloaders=src_train_loader,
                     val_dataloaders=tar_test_loader)
-        # trainer.test(model, tar_test_loader)
+
     elif params.approach == 'dann_module':
         params.dataloaders_len = min(
             len(src_train_loader), len(tar_train_loader))
         model = DannModule(params)
 
         # combine_dataloader = zip(src_train_loader, tar_train_loader)
+        trainer.fit(model=model, train_dataloaders=combine_dataloader,
+                    val_dataloaders=tar_test_loader)
+
+    elif params.approach == 'fixbi_module':
+        model = FixbiModule(params)
+
         trainer.fit(model=model, train_dataloaders=combine_dataloader,
                     val_dataloaders=tar_test_loader)

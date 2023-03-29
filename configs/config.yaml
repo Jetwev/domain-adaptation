@@ -1,11 +1,19 @@
 data_path: ./datasets
 num_classes: 31
 lr: 0.01
-approach: dann_module # source_module, dann_module
+approach: fixbi_module # source_module, dann_module, fixbi_module
+
+fixbi:
+  th: 2.0
+  bim_start: 1
+  sp_start: 7
+  cr_start: 1
+  lam_sd: 0.7
+  lam_td: 0.3
 
 # Optim parameters
 epochs: 20
-batch_size: 5
+batch_size: 7
 
 gpu:
   nb_gpus: 1
