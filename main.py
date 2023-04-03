@@ -2,6 +2,7 @@ from pathlib import Path
 
 import torch
 import torch.utils.data
+import torch.utils.data as torchdata
 from omegaconf import OmegaConf
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
@@ -38,12 +39,25 @@ if __name__ == '__main__':
     src_trainset, src_testset = get_datasets(params.source_domain, params)
     tar_trainset, tar_testset = get_datasets(params.target_domain, params)
 
-    combine_dataloader = torch.utils.data.DataLoader(ConcatDataset(src_trainset, tar_trainset), batch_size=params.batch_size,
-                                                     shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+    ratio_source = 1
+    ratio_target = 1
+    if len(src_trainset) > len(tar_trainset):
+        ratio_target = round((1.*len(src_trainset)) / len(tar_trainset))
+    else:
+        ratio_source = round((1.*len(tar_trainset)) / len(src_trainset))
 
-    src_train_loader = get_dataloaders(src_trainset, params)
+    # combine_dataloader = torch.utils.data.DataLoader(ConcatDataset(src_trainset, tar_trainset), batch_size=params.batch_size,
+    #                                                  shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+
+    src_train_loader = torchdata.DataLoader(src_trainset, batch_size=params.batch_size // ratio_source,
+                                            shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+
+    tar_train_loader = torchdata.DataLoader(tar_trainset, batch_size=params.batch_size // ratio_target,
+                                            shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+
+    # src_train_loader = get_dataloaders(src_trainset, params)
     src_test_loader = get_dataloaders(src_testset, params)
-    tar_train_loader = get_dataloaders(tar_trainset, params)
+    # tar_train_loader = get_dataloaders(tar_trainset, params)
     tar_test_loader = get_dataloaders(tar_testset, params)
 
     print(f"Number of batches in source train loader: {len(src_train_loader)}")
@@ -82,12 +96,15 @@ if __name__ == '__main__':
             len(src_train_loader), len(tar_train_loader))
         model = DannModule(params)
 
-        # combine_dataloader = zip(src_train_loader, tar_train_loader)
-        trainer.fit(model=model, train_dataloaders=combine_dataloader,
+        combine_dataloader_zip = list(zip(
+            src_train_loader, tar_train_loader))
+        trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
                     val_dataloaders=tar_test_loader)
 
     elif params.approach == 'fixbi_module':
         model = FixbiModule(params)
 
-        trainer.fit(model=model, train_dataloaders=combine_dataloader,
+        combine_dataloader_zip = list(zip(
+            src_train_loader, tar_train_loader))
+        trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
                     val_dataloaders=tar_test_loader)
