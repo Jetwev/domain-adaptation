@@ -96,15 +96,13 @@ if __name__ == '__main__':
             len(src_train_loader), len(tar_train_loader))
         model = DannModule(params)
 
-        combine_dataloader_zip = list(zip(
-            src_train_loader, tar_train_loader))
+        combine_dataloader_zip = [src_train_loader, tar_train_loader]
         trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
                     val_dataloaders=tar_test_loader)
 
     elif params.approach == 'fixbi_module':
         model = FixbiModule(params)
 
-        combine_dataloader_zip = list(zip(
-            src_train_loader, tar_train_loader))
+        combine_dataloader_zip = [src_train_loader, tar_train_loader]
         trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
                     val_dataloaders=tar_test_loader)
