@@ -30,8 +30,8 @@ if __name__ == '__main__':
                                save_dir=str(Path(params.root_dir) / 'saved'),
                                config={
                                    "learning_rate": params.lr,
-                                   "architecture": "CNN_sorce_only",
-                                   "dataset": "Office31:amazon->dslr",
+                                   "architecture": "Architect",
+                                   "dataset": "Office31",
                                    "epochs": params.epochs,
                                }
                                )
@@ -41,19 +41,39 @@ if __name__ == '__main__':
 
     ratio_source = 1
     ratio_target = 1
-    if len(src_trainset) > len(tar_trainset):
-        ratio_target = round((1.*len(src_trainset)) / len(tar_trainset))
-    else:
-        ratio_source = round((1.*len(tar_trainset)) / len(src_trainset))
+
+    if params.datasets == 'align':
+        if len(src_trainset) > len(tar_trainset):
+            ratio_target = round((1.*len(src_trainset)) / len(tar_trainset))
+        else:
+            ratio_source = round((1.*len(tar_trainset)) / len(src_trainset))
+
+    if params.datasets == 'concat':
+        if len(src_trainset) > len(tar_trainset):
+            num_copies = round((1.*len(src_trainset)) / len(tar_trainset))
+            copied_datasets = [tar_trainset for _ in range(num_copies)]
+            tar_trainset = torch.utils.data.ConcatDataset(copied_datasets)
+        else:
+            num_copies = round((1.*len(tar_trainset)) / len(src_trainset))
+            copied_datasets = [src_trainset for _ in range(num_copies)]
+            src_trainset = torch.utils.data.ConcatDataset(copied_datasets)
 
     # combine_dataloader = torch.utils.data.DataLoader(ConcatDataset(src_trainset, tar_trainset), batch_size=params.batch_size,
     #                                                  shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
 
-    src_train_loader = torchdata.DataLoader(src_trainset, batch_size=params.batch_size // ratio_source,
-                                            shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+    if params.bt_size_source == 'common':
+        src_train_loader = torchdata.DataLoader(src_trainset, batch_size=params.batch_size // ratio_source,
+                                                shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+    else:
+        src_train_loader = torchdata.DataLoader(src_trainset, batch_size=params.bt_size_source,
+                                                shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
 
-    tar_train_loader = torchdata.DataLoader(tar_trainset, batch_size=params.batch_size // ratio_target,
-                                            shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+    if params.bt_size_target == 'common':
+        tar_train_loader = torchdata.DataLoader(tar_trainset, batch_size=params.batch_size // ratio_target,
+                                                shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
+    else:
+        tar_train_loader = torchdata.DataLoader(tar_trainset, batch_size=params.bt_size_target,
+                                                shuffle=params.shuffle, drop_last=True, num_workers=params.nb_wokers)
 
     # src_train_loader = get_dataloaders(src_trainset, params)
     src_test_loader = get_dataloaders(src_testset, params)

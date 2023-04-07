@@ -1,7 +1,7 @@
 data_path: ./datasets
 num_classes: 31
-lr: 0.01
-approach: fixbi_module # source_module, dann_module, fixbi_module
+lr: 0.001
+approach: dann_module # source_module, dann_module, fixbi_module
 
 fixbi:
   th: 2.0
@@ -12,8 +12,11 @@ fixbi:
   lam_td: 0.3
 
 # Optim parameters
-epochs: 20
-batch_size: 7
+epochs: 50
+batch_size: 32
+bt_size_source: common # common or number
+bt_size_target: common # common or number
+datasets: default # align, concat, default
 
 gpu:
   nb_gpus: 1
@@ -28,7 +31,9 @@ device: cpu
 
 # Other parameters
 shuffle: True
-source_domain: amazon
-target_domain: dslr
+source_domain: dslr
+target_domain: webcam
 nb_wokers: 4
 check: False
+
+ 

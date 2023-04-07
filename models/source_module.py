@@ -5,14 +5,16 @@ from pytorch_lightning import LightningModule, Trainer, seed_everything
 from torchmetrics.functional import accuracy
 from torchvision.models import resnet50
 
-from models.dann import Classifier, Extractor
+from models.resnet import Classifier, ResNet50
+
+# from models.dann import Classifier, Extractor
 
 
 class SourceOnly(LightningModule):
     def __init__(self, params):
         super().__init__()
-        # self.arch = ResNet50()
-        self.encoder = Extractor()
+        self.encoder = ResNet50()
+        # self.encoder = Extractor()
         self.classifier = Classifier(params.num_classes)
         self.loss = nn.CrossEntropyLoss()
         self.lr = params.lr
@@ -41,7 +43,6 @@ class SourceOnly(LightningModule):
     def evaluate(self, batch, stage=None):
         x, y = batch
         logits = self(x)
-        # loss = self.loss(logits, y)
         preds = torch.argmax(logits, dim=1)
         acc = accuracy(preds, y, 'multiclass', num_classes=self.num_classes)
 
@@ -56,6 +57,8 @@ class SourceOnly(LightningModule):
             momentum=0.9,
             weight_decay=5e-4,
         )
+
+        # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
 
         scheduler_dict = {
             "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),

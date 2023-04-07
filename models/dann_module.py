@@ -5,9 +5,10 @@ import torch.optim.lr_scheduler as lr_scheduler
 from pytorch_lightning import LightningModule
 from torchmetrics.functional import accuracy
 
-from models.dann import Classifier, Discriminator, Extractor
+from models.dann import Discriminator
+from models.resnet import Classifier, ResNet50
 
-# from models.resnet import ResNet50, Classifier
+# from models.dann import Classifier, Discriminator, Extractor
 
 
 class CustomLRScheduler(lr_scheduler._LRScheduler):
@@ -37,8 +38,8 @@ class CustomLRScheduler(lr_scheduler._LRScheduler):
 class DannModule(LightningModule):
     def __init__(self, params):
         super().__init__()
-        # self.arch = ResNet50()
-        self.encoder = Extractor()
+        self.encoder = ResNet50()
+        # self.encoder = Extractor()
         self.classifier = Classifier(params.num_classes)
         self.discriminator = Discriminator()
         self.class_loss = nn.CrossEntropyLoss()
@@ -75,7 +76,7 @@ class DannModule(LightningModule):
             y_target.shape[0]).type(torch.LongTensor)
         combine = torch.cat((x_source, x_target), 0)
         domain_combined_label = torch.cat(
-            (domain_source_labels, domain_target_labels), 0).type(torch.LongTensor).to(combine.get_device())
+            (domain_source_labels, domain_target_labels), 0).type(torch.LongTensor).to(combine.get_device()).detach()
 
         combine = self.encoder(combine)
         domain_logits = self.discriminator(combine, alpha)
@@ -114,14 +115,16 @@ class DannModule(LightningModule):
             momentum=0.9,
             weight_decay=5e-4,
         )
+        # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+
+        scheduler_dict = {
+            "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
+            "interval": "step",
+        }
 
         # scheduler_dict = {
         #     "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
         #     "interval": "step",
         # }
-        scheduler_dict = {
-            "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
-            "interval": "step",
-        }
 
         return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}
