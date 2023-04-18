@@ -11,31 +11,7 @@ from models.resnet import Classifier, ResNet50
 # from models.dann import Classifier, Discriminator, Extractor
 
 
-class CustomLRScheduler(lr_scheduler._LRScheduler):
-    def __init__(self, optimizer, length, epochs, last_epoch=-1):
-        self.length = length
-        self.epochs = epochs
-        super(CustomLRScheduler, self).__init__(optimizer, last_epoch)
-
-    def get_lr(self):
-        start_steps = self.last_epoch * self.length
-        total_steps = self.epochs * self.length
-        p = float(self._step_count + start_steps) / total_steps
-
-        for param_group in self.optimizer.param_groups:
-            param_group['lr'] = 0.01 / (1. + 10 * p) ** 0.75
-
-        return [param_group['lr']
-                for param_group in self.optimizer.param_groups]
-
-    def on_train_start(self, trainer, pl_module):
-        self._step_count = 0
-
-    def on_batch_end(self, trainer, pl_module):
-        self._step_count += 1
-
-
-class DannModule(LightningModule):
+class MstnModule(LightningModule):
     def __init__(self, params):
         super().__init__()
         self.encoder = ResNet50()
@@ -49,6 +25,9 @@ class DannModule(LightningModule):
         self.batch_size = params.batch_size
         self.num_classes = params.num_classes
         self.length = params.dataloaders_len
+        self.dict_source = {}
+        self.dict_target = {}
+        self.tetha = 0.7
 
     def training_step(self, batch, batch_idx):
         # input is a zip of two domains, seperate them
@@ -65,8 +44,8 @@ class DannModule(LightningModule):
         alpha = 2. / (1. + np.exp(-10 * p)) - 1.
 
         # source clssification loss
-        logits = self.encoder(x_source)
-        logits = self.classifier(logits)
+        repr_source = self.encoder(x_source)
+        logits = self.classifier(repr_source)
         class_loss = self.class_loss(logits, y_source)
 
         # domain loss
@@ -82,12 +61,44 @@ class DannModule(LightningModule):
         domain_logits = self.discriminator(combine, alpha)
         domain_loss = self.discr_loss(domain_logits, domain_combined_label)
 
+        # semantic loss
+        repr_target = self.encoder(x_target)
+        tar_logits = self.classifier(repr_target)
+        tar_logits = torch.argmax(tar_logits, dim=1)
+
+        temp_dict_source = {}
+        for k in torch.unique(y_source):
+            occur_k = torch.sum(y_source == k)
+            for i, x in enumerate(y_source):
+                if x == k:
+                    temp_dict_source[k] = temp_dict_source.get(
+                        k, torch.zeros_like(repr_source[i])) + repr_source[i]
+
+            self.dict_source[k.item()] = self.tetha * self.dict_source.get(
+                k.item(), torch.zeros_like(temp_dict_source[k])) + (1 - self.tetha) * temp_dict_source[k] / occur_k
+
+        temp_dict_target = {}
+        for k in torch.unique(tar_logits):
+            occur_k = torch.sum(tar_logits == k)
+            for i, x in enumerate(tar_logits):
+                if x == k:
+                    temp_dict_target[k] = temp_dict_target.get(
+                        k, torch.zeros_like(repr_target[i])) + repr_target[i]
+
+            self.dict_target[k.item()] = self.tetha * self.dict_target.get(
+                k.item(), torch.zeros_like(temp_dict_target[k])) + (1 - self.tetha) * temp_dict_target[k] / occur_k
+
+        sem_loss = 0
+        for k in range(self.num_classes):
+            sem_loss += ((self.dict_source.get(k, torch.zeros_like(repr_source[0])) -
+                         self.dict_target.get(k, torch.zeros_like(repr_target[0])))**2).sum(axis=0)
+
         # total loss
-        total_loss = class_loss + domain_loss
+        total_loss = class_loss + domain_loss + sem_loss
 
         # log loss
         self.log_dict({"train_loss": total_loss, "domain_loss": domain_loss,
-                      "class_loss": class_loss}, on_epoch=True, on_step=False)
+                      "semantic loss": sem_loss}, on_epoch=True, on_step=False)
 
         return total_loss
 
@@ -118,14 +129,14 @@ class DannModule(LightningModule):
         )
         # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
 
-        scheduler_dict = {
-            "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
-            "interval": "step",
-        }
-
         # scheduler_dict = {
-        #     "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
+        #     "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
         #     "interval": "step",
         # }
+
+        scheduler_dict = {
+            "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
+            "interval": "step",
+        }
 
         return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}

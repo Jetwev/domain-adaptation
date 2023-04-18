@@ -56,7 +56,7 @@ class FixbiModule(LightningModule):
 
         current_epoch = self.trainer.current_epoch
 
-        x_sd = self.source_classifier(x_source)
+        x_sd = self.source_classifier(x_target)
         x_td = self.target_classifier(x_target)
 
         # for souce domain

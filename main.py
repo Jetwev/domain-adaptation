@@ -12,6 +12,7 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 from datamodule.datasets import ConcatDataset, get_dataloaders, get_datasets
 from models.dann_module import DannModule
 from models.fixbi_module import FixbiModule
+from models.mstn_module import MstnModule
 from models.source_module import SourceOnly
 from utils.utils import get_image
 
@@ -115,6 +116,15 @@ if __name__ == '__main__':
         params.dataloaders_len = min(
             len(src_train_loader), len(tar_train_loader))
         model = DannModule(params)
+
+        combine_dataloader_zip = [src_train_loader, tar_train_loader]
+        trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
+                    val_dataloaders=tar_test_loader)
+
+    elif params.approach == 'mstn_module':
+        params.dataloaders_len = min(
+            len(src_train_loader), len(tar_train_loader))
+        model = MstnModule(params)
 
         combine_dataloader_zip = [src_train_loader, tar_train_loader]
         trainer.fit(model=model, train_dataloaders=combine_dataloader_zip,
