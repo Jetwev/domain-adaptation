@@ -71,27 +71,31 @@ class MstnModule(LightningModule):
             occur_k = torch.sum(y_source == k)
             for i, x in enumerate(y_source):
                 if x == k:
-                    temp_dict_source[k] = temp_dict_source.get(
-                        k, torch.zeros_like(repr_source[i])) + repr_source[i]
+                    temp_dict_source[k.item()] = temp_dict_source.get(
+                        k.item(), torch.zeros_like(repr_source[i])) + repr_source[i]
 
-            self.dict_source[k.item()] = self.tetha * self.dict_source.get(
-                k.item(), torch.zeros_like(temp_dict_source[k])) + (1 - self.tetha) * temp_dict_source[k] / occur_k
+            temp_dict_source[k.item()] = self.tetha * self.dict_source.get(
+                k.item(), torch.zeros_like(temp_dict_source[k.item()])).detach() + (1 - self.tetha) * temp_dict_source[k.item()] / occur_k
 
         temp_dict_target = {}
         for k in torch.unique(tar_logits):
             occur_k = torch.sum(tar_logits == k)
             for i, x in enumerate(tar_logits):
                 if x == k:
-                    temp_dict_target[k] = temp_dict_target.get(
-                        k, torch.zeros_like(repr_target[i])) + repr_target[i]
+                    temp_dict_target[k.item()] = temp_dict_target.get(
+                        k.item(), torch.zeros_like(repr_target[i])) + repr_target[i]
 
-            self.dict_target[k.item()] = self.tetha * self.dict_target.get(
-                k.item(), torch.zeros_like(temp_dict_target[k])) + (1 - self.tetha) * temp_dict_target[k] / occur_k
+            temp_dict_target[k.item()] = self.tetha * self.dict_target.get(
+                k.item(), torch.zeros_like(temp_dict_target[k.item()])).detach() + (1 - self.tetha) * temp_dict_target[k.item()] / occur_k
 
         sem_loss = 0
         for k in range(self.num_classes):
-            sem_loss += ((self.dict_source.get(k, torch.zeros_like(repr_source[0])) -
-                         self.dict_target.get(k, torch.zeros_like(repr_target[0])))**2).sum(axis=0)
+            sem_loss += ((temp_dict_source.get(k, torch.zeros_like(repr_source[0])) -
+                         temp_dict_target.get(k, torch.zeros_like(repr_target[0])))**2).sum(axis=0)
+            self.dict_source[k] = temp_dict_source.get(
+                k, torch.zeros_like(repr_source[0])).detach()
+            self.dict_target[k] = temp_dict_target.get(
+                k, torch.zeros_like(repr_target[0])).detach()
 
         # total loss
         total_loss = class_loss + domain_loss + sem_loss
