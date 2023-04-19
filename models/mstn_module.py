@@ -89,16 +89,18 @@ class MstnModule(LightningModule):
                 k.item(), torch.zeros_like(temp_dict_target[k.item()])).detach() + (1 - self.tetha) * temp_dict_target[k.item()] / occur_k
 
         sem_loss = 0
-        for k in range(self.num_classes):
+        for k in set().union(temp_dict_source, temp_dict_target):
             sem_loss += ((temp_dict_source.get(k, torch.zeros_like(repr_source[0])) -
                          temp_dict_target.get(k, torch.zeros_like(repr_target[0])))**2).sum(axis=0)
-            self.dict_source[k] = temp_dict_source.get(
-                k, torch.zeros_like(repr_source[0])).detach()
-            self.dict_target[k] = temp_dict_target.get(
-                k, torch.zeros_like(repr_target[0])).detach()
+            if k in temp_dict_source.keys():
+                self.dict_source[k] = temp_dict_source.get(
+                    k, torch.zeros_like(repr_source[0])).detach()
+            if k in temp_dict_target.keys():
+                self.dict_target[k] = temp_dict_target.get(
+                    k, torch.zeros_like(repr_target[0])).detach()
 
         # total loss
-        total_loss = class_loss + domain_loss + sem_loss
+        total_loss = class_loss + alpha*domain_loss + alpha*sem_loss
 
         # log loss
         self.log_dict({"train_loss": total_loss, "domain_loss": domain_loss,
