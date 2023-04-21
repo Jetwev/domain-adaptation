@@ -23,6 +23,8 @@ params.root_dir = str(Path(__file__).parent.resolve())
 
 if __name__ == '__main__':
 
+    seed_everything(42, workers=True)
+
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     params.device = device
 

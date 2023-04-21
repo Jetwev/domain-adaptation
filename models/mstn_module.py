@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim.lr_scheduler as lr_scheduler
+from dann_module import CustomLRScheduler
 from pytorch_lightning import LightningModule
 from torchmetrics.functional import accuracy
 
@@ -28,6 +29,8 @@ class MstnModule(LightningModule):
         self.dict_source = {}
         self.dict_target = {}
         self.tetha = 0.7
+        self.opt = params.optimizer
+        self.sched = params.scheduler
 
     def training_step(self, batch, batch_idx):
         # input is a zip of two domains, seperate them
@@ -104,7 +107,7 @@ class MstnModule(LightningModule):
 
         # log loss
         self.log_dict({"train_loss": total_loss, "domain_loss": domain_loss,
-                      "semantic loss": sem_loss}, on_epoch=True, on_step=False)
+                      "class_loss": class_loss, "semantic loss": sem_loss}, on_epoch=True, on_step=False)
 
         return total_loss
 
@@ -127,22 +130,29 @@ class MstnModule(LightningModule):
                           on_epoch=True, on_step=False)  # f"{stage}_loss": loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
-            self.parameters(),
-            lr=self.lr,
-            momentum=0.9,
-            weight_decay=5e-4,
-        )
-        # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        if self.opt == 'sgd':
+            optimizer = torch.optim.SGD(
+                self.parameters(),
+                lr=self.lr,
+                momentum=0.9,
+                weight_decay=5e-4,
+            )
+        elif self.opt == 'adam':
+            optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        else:
+            raise Exception('Error: Unknown optimizer')
 
-        # scheduler_dict = {
-        #     "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
-        #     "interval": "step",
-        # }
-
-        scheduler_dict = {
-            "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
-            "interval": "step",
-        }
+        if self.sched == 'cos':
+            scheduler_dict = {
+                "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
+                "interval": "step",
+            }
+        elif self.sched == 'cust':
+            scheduler_dict = {
+                "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
+                "interval": "step",
+            }
+        else:
+            raise Exception('Error: invalid scheduler')
 
         return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}

@@ -1,18 +1,18 @@
 data_path: ./datasets
 num_classes: 31
 lr: 0.001
-approach: dann_module # source_module, dann_module, fixbi_module
+approach: mstn_module # source_module, dann_module, fixbi_module, mstn_module
 
 fixbi:
   th: 2.0
-  bim_start: 1
-  sp_start: 7
-  cr_start: 1
+  bim_start: 100
+  sp_start: 100
+  cr_start: 100
   lam_sd: 0.7
   lam_td: 0.3
 
 # Optim parameters
-epochs: 50
+epochs: 60
 batch_size: 32
 bt_size_source: common # common or number
 bt_size_target: common # common or number
@@ -33,6 +33,8 @@ device: cpu
 shuffle: True
 source_domain: dslr
 target_domain: webcam
+optimizer: sgd # sgd, adam
+scheduler: cos # cos, cust
 nb_wokers: 4
 check: False
 

@@ -49,6 +49,8 @@ class DannModule(LightningModule):
         self.batch_size = params.batch_size
         self.num_classes = params.num_classes
         self.length = params.dataloaders_len
+        self.opt = params.optimizer
+        self.sched = params.scheduler
 
     def training_step(self, batch, batch_idx):
         # input is a zip of two domains, seperate them
@@ -86,7 +88,7 @@ class DannModule(LightningModule):
         total_loss = class_loss + domain_loss
 
         # log loss
-        self.log_dict({"train_loss": total_loss, "domain_loss": domain_loss,
+        self.log_dict({"train_loss": total_loss, "domain loss": domain_loss,
                       "class_loss": class_loss}, on_epoch=True, on_step=False)
 
         return total_loss
@@ -110,22 +112,29 @@ class DannModule(LightningModule):
                           on_epoch=True, on_step=False)  # f"{stage}_loss": loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
-            self.parameters(),
-            lr=self.lr,
-            momentum=0.9,
-            weight_decay=5e-4,
-        )
-        # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        if self.opt == 'sgd':
+            optimizer = torch.optim.SGD(
+                self.parameters(),
+                lr=self.lr,
+                momentum=0.9,
+                weight_decay=5e-4,
+            )
+        elif self.opt == 'adam':
+            optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        else:
+            raise Exception('Error: Unknown optimizer')
 
-        scheduler_dict = {
-            "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
-            "interval": "step",
-        }
-
-        # scheduler_dict = {
-        #     "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
-        #     "interval": "step",
-        # }
+        if self.sched == 'cos':
+            scheduler_dict = {
+                "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
+                "interval": "step",
+            }
+        elif self.sched == 'cust':
+            scheduler_dict = {
+                "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
+                "interval": "step",
+            }
+        else:
+            raise Exception('Error: invalid scheduler')
 
         return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from dann_module import CustomLRScheduler
 from pytorch_lightning import LightningModule, Trainer, seed_everything
 from torchmetrics.functional import accuracy
 from torchvision.models import resnet50
@@ -21,6 +22,8 @@ class SourceOnly(LightningModule):
         self.epochs = params.epochs
         self.batch_size = params.batch_size
         self.num_classes = params.num_classes
+        self.opt = params.optimizer
+        self.sched = params.scheduler
 
     def forward(self, x):
         x = self.encoder(x)
@@ -51,17 +54,29 @@ class SourceOnly(LightningModule):
                           on_epoch=True, on_step=False)  # f"{stage}_loss": loss,
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(
-            self.parameters(),
-            lr=self.lr,
-            momentum=0.9,
-            weight_decay=5e-4,
-        )
+        if self.opt == 'sgd':
+            optimizer = torch.optim.SGD(
+                self.parameters(),
+                lr=self.lr,
+                momentum=0.9,
+                weight_decay=5e-4,
+            )
+        elif self.opt == 'adam':
+            optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        else:
+            raise Exception('Error: Unknown optimizer')
 
-        # optimizer = torch.optim.Adam(self.parameters(), lr=1.0e-3)
+        if self.sched == 'cos':
+            scheduler_dict = {
+                "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
+                "interval": "step",
+            }
+        elif self.sched == 'cust':
+            scheduler_dict = {
+                "scheduler": CustomLRScheduler(optimizer, self.length, self.epochs),
+                "interval": "step",
+            }
+        else:
+            raise Exception('Error: invalid scheduler')
 
-        scheduler_dict = {
-            "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
-            "interval": "step",
-        }
         return {"optimizer": optimizer, "lr_scheduler": scheduler_dict}
