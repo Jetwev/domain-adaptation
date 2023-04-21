@@ -71,7 +71,14 @@ class Discriminator(nn.Module):
         self.discriminator = nn.Sequential(
             nn.Linear(in_features=2048, out_features=1024),
             nn.ReLU(),
-            nn.Linear(in_features=1024, out_features=2)
+            nn.Dropout(0.5),
+            nn.Linear(in_features=1024, out_features=256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(in_features=256, out_features=32),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(in_features=32, out_features=2)
         )
 
     def forward(self, x, alpha):
