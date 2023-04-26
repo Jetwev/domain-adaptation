@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from dann_module import CustomLRScheduler
 from pytorch_lightning import LightningModule, Trainer, seed_everything
 from torchmetrics.functional import accuracy
 from torchvision.models import resnet50
 
+from models.dann_module import CustomLRScheduler
 from models.resnet import Classifier, ResNet50
 
 # from models.dann import Classifier, Extractor

@@ -2,11 +2,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim.lr_scheduler as lr_scheduler
-from dann_module import CustomLRScheduler
 from pytorch_lightning import LightningModule
 from torchmetrics.functional import accuracy
 
 from models.dann import Discriminator
+from models.dann_module import CustomLRScheduler
 from models.resnet import Classifier, ResNet50
 
 # from models.dann import Classifier, Discriminator, Extractor

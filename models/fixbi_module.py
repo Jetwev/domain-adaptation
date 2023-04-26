@@ -7,6 +7,7 @@ from pytorch_lightning import LightningModule
 from torchmetrics.functional import accuracy
 
 from models.dann import Classifier, Extractor
+from models.dann_module import CustomLRScheduler
 
 # from models.resnet import ResNet50, Classifier
 
@@ -49,6 +50,7 @@ class FixbiModule(LightningModule):
     def training_step(self, batch, batch_idx):
         # optimizers
         sr_opt, tr_opt = self.optimizers()
+        sch1, sch2 = self.lr_schedulers()
 
         # seperate two domains
         x_source, y_source = batch[0]
@@ -139,6 +141,8 @@ class FixbiModule(LightningModule):
         self.manual_backward(total_loss)
         sr_opt.step()
         tr_opt.step()
+        sch1.step()
+        sch2.step()
 
         return total_loss
 
@@ -184,8 +188,8 @@ class FixbiModule(LightningModule):
                            num_classes=self.num_classes)
 
         if stage:
-            self.log_dict({f"{stage}_sum_acc": sum_acc, f"{stage}_sdm_acc": acc_sdm, f"{stage}_tdm_acc": acc_tdm}, prog_bar=True,
-                          on_epoch=True, on_step=False)
+            self.log_dict({f"{stage}_sum_acc": sum_acc, f"{stage}_sdm_acc": acc_sdm,
+                          f"{stage}_tdm_acc": acc_tdm}, prog_bar=True, on_epoch=True, on_step=False)
 
     def configure_optimizers(self):
         source_optimizer = torch.optim.SGD(
@@ -205,9 +209,14 @@ class FixbiModule(LightningModule):
         target_optimizer.add_param_group(
             {"params": [self.sp_param_td], "lr": self.lr})
 
-        # scheduler_dict = {
-        #     "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, self.epochs),
-        #     "interval": "step",
-        # }
+        scheduler_sdict = {
+            "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(source_optimizer, self.epochs),
+            "interval": "step",
+        }
 
-        return source_optimizer, target_optimizer
+        scheduler_tdict = {
+            "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(target_optimizer, self.epochs),
+            "interval": "step",
+        }
+
+        return [source_optimizer, target_optimizer], [scheduler_sdict, scheduler_tdict]
