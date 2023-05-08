@@ -1,0 +1,41 @@
+
+Domain adaptation is a subfield of machine learning that deals with the problem of transferring knowledge learned from one domain to another related but different domain. In real-world scenarios, it is common to encounter situations where the data distribution of the target domain differs significantly from the source domain used to train a model. This can lead to a significant drop in the performance of the model on the target domain.\\
+
+To understand clearly what domain adaptation is about, we should start with transfer learning. For this purpose, we should dig deeper into the theory. In these articles \cite{redko2020survey} and \cite{wilson2020survey}  you can find a high level overview of the theory that connects with domain adaptation. Let's start with the transfer learning definition and types that it consists of. 
+
+\begin{definition}
+(Transfer learning) We consider a source data distribution S called the source domain, and a target
+data distribution $T$ called the target domain. Let $X_S$ × $Y_S$ be the source input and output spaces associated to $S$, and $X_T$ × $Y_T$ be the target input and output spaces associated to $T$. We use $S_X$ and $T_X$ to denote the marginal distributions of $X_S$ and $X_T$ , $t_S$ and $t_T$ to denote the source and target learning tasks depending on $Y_S$ and $Y_T$, respectively. Then, transfer learning aims to help to improve the learning of the target predictive function $f_T$ : $X_T \longrightarrow Y_T$ for $t_T$ using
+knowledge gained from $S$ and $t_S$ , where $S = T$.
+\end{definition}
+
+According to these papers (\cite{redko2020survey}, \cite{wilson2020survey}), transfer learning algorithms can be classified into three categories based on the differences between the source and target tasks and domains: inductive, transductive, and unsupervised transfer learning. 
+\begin{itemize}
+    \item \textbf{Inductive transfer learning} involves using labeled data from the source domain to train a model for a different, but related, target task in the target domain. In this case, some labeled data from the target domain is required to fine-tune the model.
+
+    \item \textbf{Transductive transfer learning}, on the other hand, refers to using both labeled data from the source domain and unlabeled data from the target domain to improve the model's performance on the target domain. In this case, the tasks remain the same while the domains are different.
+
+    \item \textbf{Unsupervised transfer learning} involves adapting a model trained on the source task to perform well on a related, but different target task in the target domain, without any labeled data in either the source or target domains.
+\end{itemize}
+
+Domain adaptation is a type of transfer learning where the target task remains the same as the source task, but the domain differs (the second type -- transductive transfer learning). Depending on whether the feature spaces remain the same or differ, domain adaptation is categorized into homogeneous and heterogeneous domain adaptation. Machine learning techniques are commonly categorized based on the availability of labeled training data, such as supervised, semi-supervised, and unsupervised learning. However, domain adaptation assumes the availability of data from both the source and target domains, making it ambiguous to append one of these three terms to "domain adaptation". There are different ways how these terms can be applied to domain adaptation, but we use the same as in \cite{wilson2020survey}. 
+
+\begin{itemize}
+    \item \textbf{Unsupervised domain adaptation} refers to the case where both labeled source data and unlabeled target data are available
+    \item \textbf{Semi-supervised domain adaptation} refers to the case where labeled source data and some labeled target data are available
+    \item \textbf{Supervised domain adaptation} refers to the case where both labeled source and target data are available.
+\end{itemize}
+
+This paper is more focused on studying unsupervised domain adaptation with using deep neural-networks. Before move on to the practical part, it is important to discuss theoretical analysis and guarantees that can be used in fields associated with transfer learning. Thus, there are several methods that allow you to analyze the generalization gap in machine learning \cite{wang2018theoretical}. One of the most popular approaches is the model complexity approach, which estimates the generalization bound by measuring the complexity of the hypothesis set, such as Vapnik-Chervonenkis (VC) dimension and Rademacher complexity. Another approach is to use the stability of the supervised learning algorithm in relation to the datasets. Stability is a measure of how much a change in a data point in the training set can affect the output of the algorithm. Both of these approaches have been used to analyze the generalization bounds of transfer learning algorithms.\\
+
+It is equally important to discuss distributions and what experts mean by shift when analyzing transfer learning algorithms. Distribution refers to the set of all possible values of a random variable, and a shift refers to a change in the distribution of the data between the source and target domains. Understanding the shift in the distribution of the data is crucial in developing effective transfer learning algorithms, as it enables the selection of appropriate techniques for adapting the model to the target domain. \\
+
+Unsupervised domain adaptation (UDA) is a type of supervised learning that involves training a model using labeled source data and applying it to unlabeled target data, where the distributions of the two domains differ. Let the source domain be represented by $(x^S , y^S ) = (x^S_k , y^S_k)_{k=1}^{m_S}$ , and the target domain be represented by $x^T = (x_k^T)_{k=1}^{m_T}$. The number of observations in the source and target domains are denoted by $m_S$ and $m_T$ respectively. The main challenge of domain adaptation is to develop a predictor that performs well in the target domain by leveraging the similarities between the two domains. One way to accomplish this is by making assumptions about how the joint distribution $P(X, Y)$ changes across the domains. In the case of \textit{covariate shift}, the marginal distribution $P(X)$ changes while the conditional distribution $P(Y|X)$ remains the same. However, in real-world scenarios, $P(Y|X)$ may also change, requiring further assumptions. One such assumption is that the joint distribution can be factored into $P(Y)$ and $P(X|Y)$, allowing changes in $P(Y)$ and $P(X|Y)$ to be addressed independently. The problem is then broken down into three types of shifts \cite{stojanov2021domain}: 
+
+\begin{itemize}
+    \item \textbf{Target shift}, where $P(Y)$ changes while $P(X|Y)$ remains the same
+    \item \textbf{Conditional shift}, where $P(X|Y)$ changes while $P(Y)$ stays the same
+    \item \textbf{Conditional-target shift}, where both $P(X|Y)$ and $P(Y)$ change independently
+\end{itemize}
+
+This research paper aims to explore the application of deep neural networks in unsupervised domain adaptation for learning latent representations in scenarios where there is a "conditional shift" or "conditional target-shift" in the joint distribution of features and labels.
