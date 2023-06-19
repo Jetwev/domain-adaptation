@@ -1,2 +1,281 @@
-\section{Appendix A} \label{section: appendix A title}
-%\lipsum[1-8]
+\section{Appendix} \label{section: appendix A}
+
+\textit{This appendix presents the results for each domain. In order to make comparisons, 15 experiments were conducted for each method within each area. The Wilcoxon rank test was employed to analyze and assess the performance of the methods. The best-performing method for each experiment is denoted by bold values and statistical significance is denoted with a star (*).}
+
+\begin{table}[h]
+\centering
+\caption{Accuracy on Office-31 for the source Amazon and the target Dslr domains.}
+\label{tab:AD}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & A$\rightarrow$D & A$\rightarrow$D & A$\rightarrow$D & A$\rightarrow$D & A$\rightarrow$D \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 81.67 & 83.13 & 77.71 & 76.88 & 86.87 \\ \hline
+2 & 81.04 & 82.92 & 76.88 & 70.1 & 86.46 \\ \hline
+3 & 81.04 & 82.71 & 76.67 & 77.08 & 87.29 \\ \hline
+4 & 80.21 & 83.33 & 75.63 & 73.96 & 84.79 \\ \hline
+5 & 79.79 & 82.71 & 75.21 & 83.54 & 84.38 \\ \hline
+6 & 79.17 & 82.29 & 74.79 & 79.79 & 85 \\ \hline
+7 & 79.97 & 82.08 & 73.33 & 76.67 & 85.21 \\ \hline
+8 & 80.75 & 81.67 & 73.33 & 70.83 & 85.73 \\ \hline
+9 & 81.07 & 81.25 & 78.98 & 82.08 & 86.61 \\ \hline
+10 & 79.9 & 80.21 & 75.97 & 83.13 & 84.41 \\ \hline
+11 & 79.12 & 82.36 & 76.14 & 81.04 & 85.58 \\ \hline
+12 & 79.47 & 82.29 & 76.83 & 82.5 & 85.42 \\ \hline
+13 & 80.17 & 81.46 & 74.79 & 79.58 & 86.4 \\ \hline
+14 & 81.51 & 82.5 & 76.68 & 73.75 & 85.08 \\ \hline
+15 & 80.11 & 81.67 & 74.48 & 71.25 & 84.22 \\ \hline 
+avg & 80.33 & 82.17 & 75.83 & 77.48 & \textbf{85.56}$^*$ \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Wilcoxon signed-rank test for the source Amazon and the target Dslr domains.}
+\label{tab:AD_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & A$\rightarrow$D \\ \hline
+Source and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Dann and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117} $ $\leq$ 0.025} \\ \hline
+Mstn and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Accuracy on Office-31 for the source Amazon and the target Webcam domains.}
+\label{tab:AW}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & A$\rightarrow$W & A$\rightarrow$W & A$\rightarrow$W & A$\rightarrow$W & A$\rightarrow$W \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 76.43 & 78.91 & 72.53 & 87.11 & 85.81 \\ \hline
+2 & 76.04 & 78.65 & 72.4 & 86.72 & 86.07 \\ \hline
+3 & 76.04 & 78.65 & 71.48 & 81.77 & 86.07 \\ \hline
+4 & 76.45 & 80.23 & 70.23 & 81.38 & 83.07 \\ \hline
+5 & 76.28 & 79.31 & 71.11 & 83.58 & 84.64 \\ \hline
+6 & 75.44 & 79.15 & 73.81 & 80.57 & 85.29 \\ \hline
+7 & 76.88 & 80.05 & 71.55 & 85.1 & 82.81 \\ \hline
+8 & 75.92 & 80.66 & 69.55 & 81.68 & 85.55 \\ \hline
+9 & 77.22 & 78.79 & 70.54 & 80.28 & 84.51 \\ \hline
+10 & 76.09 & 79.05 & 71.21 & 82.78 & 85.42 \\ \hline
+11 & 78.7 & 79.83 & 69.36 & 84.21 & 84.9 \\ \hline
+12 & 75.67 & 78.81 & 70.28 & 81.08 & 82.29 \\ \hline
+13 & 75.9 & 80.47 & 71.67 & 79.27 & 83.33 \\ \hline
+14 & 76.71 & 78.2 & 71.72 & 83.44 & 82.68 \\ \hline
+15 & 77.65 & 78.77 & 72.1 & 81.11 & 81.64 \\ \hline
+avg & 76.49 & 79.30 & 71.30 & 82.67 & \textbf{84.27}$^*$ \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon signed-rank test for the source Amazon and the target Webcam domains.}
+\label{tab:AW_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & A$\rightarrow$D \\ \hline
+Source and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Dann and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117} $ $\leq$ 0.025} \\ \hline
+Mstn and DannFixbi & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and DannFixbi & \textbf{$p(x > 2.1583) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+\end{tabular}
+\end{table} 
+
+\begin{table}[H]
+\centering
+\caption{Accuracy on Office-31 for the source Dslr and the target Webcam domains.}
+\label{tab:DW}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & D$\rightarrow$W & D$\rightarrow$W & D$\rightarrow$W & D$\rightarrow$W & D$\rightarrow$W \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 95.96 & 96.35 & 92.06 & 94.66 & 97.53 \\ \hline
+2 & 95.7 & 95.96 & 91.8 & 90.89 & 97.35 \\ \hline
+3 & 95.7 & 95.83 & 91.41 & 88.54 & 97.44 \\ \hline
+4 & 97.01 & 94.92 & 93.49 & 92.78 & 96.74 \\ \hline
+5 & 94.79 & 96.48 & 93.1 & 93.1 & 96.88 \\ \hline
+6 & 96.88 & 94.4 & 91.67 & 94.4 & 97.27 \\ \hline
+7 & 95.44 & 95.96 & 92.32 & 91.69 & 97.4 \\ \hline
+8 & 94.92 & 96.22 & 92.19 & 93.53 & 96.61 \\ \hline
+9 & 96.74 & 96.35 & 95.44 & 92.29 & 97.14 \\ \hline
+10 & 95.96 & 95.05 & 94.27 & 94.42 & 97.01 \\ \hline
+11 & 95.05 & 94.79 & 91.02 & 96.88 & 95.7 \\ \hline
+12 & 95.7 & 96.61 & 93.23 & 91.92 & 97.53 \\ \hline
+13 & 97.53 & 95.57 & 92.19 & 92.55 & 96.09 \\ \hline
+14 & 95.18 & 97.01 & 90.23 & 93.53 & 96.35 \\ \hline
+15 & 96.61 & 96.09 & 95.18 & 94.82 & 95.7 \\ \hline
+avg & 95.94 & 95.84 & 92.64 & 93.07 & \textbf{96.85}$^*$ \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon signed-rank test for the source Dslr and the target Webcam domains.}
+\label{tab:DW_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & D$\rightarrow$W \\ \hline
+Source and DannFixbi & \textbf{$p(x > 2.4422) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Dann and DannFixbi & \textbf{$p(x > 2.7262) = \textbf{0.0117} $ $\leq$ 0.025} \\ \hline
+Mstn and DannFixbi & \textbf{$p(x > 3.3510) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and DannFixbi & \textbf{$p(x > 3.2942) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+\end{tabular}
+\end{table} 
+
+\begin{table}[H]
+\centering
+\caption{Accuracy on Office-31 for the source Dslr and the target Amazon domains.}
+\label{tab:DA}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & D$\rightarrow$A & D$\rightarrow$A & D$\rightarrow$A & D$\rightarrow$A & D$\rightarrow$A \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 60.33 & 64.35 & 33.38 & 23.19 & 65.27 \\ \hline
+2 & 60.09 & 63.88 & 32.1 & 15.23 & 64.81 \\ \hline
+3 & 59.38 & 63.92 & 34.09 & 16.01 & 63.53 \\ \hline
+4 & 58.03 & 62.6 & 36.01 & 17.8 & 62.43 \\ \hline
+5 & 57.17 & 63.36 & 37.71 & 43.54 & 61.54 \\ \hline
+6 & 58.98 & 62.31 & 38.6 & 25 & 61.93 \\ \hline
+7 & 59.2 & 62.48 & 34.94 & 20.06 & 60.72 \\ \hline
+8 & 60.23 & 61.11 & 33.1 & 25.5 & 61.26 \\ \hline
+9 & 57.74 & 63.18 & 35.12 & 26.1 & 62.96 \\ \hline
+10 & 58.1 & 63.94 & 34.2 & 29.58 & 64.88 \\ \hline
+11 & 59.3 & 62.48 & 36.72 & 23.22 & 60.8 \\ \hline
+12 & 60.72 & 62.9 & 32.81 & 20.7 & 62.18 \\ \hline
+13 & 58.35 & 63.72 & 43.08 & 24.57 & 63.03 \\ \hline
+14 & 59.17 & 63.6 & 39.38 & 23.08 & 64.7 \\ \hline
+15 & 56.85 & 62.22 & 40.8 & 42.12 & 61.36 \\ \hline
+avg & 58.91 & \textbf{63.07} & 36.14 & 25.05 & 62.76 \\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon signed-rank test for the source Dslr and the target Amazon domains.}
+\label{tab:DA_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & D$\rightarrow$A \\ \hline
+Source and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Mstn and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\\hline
+DannFixbi and Dann & \textbf{$p(x > 1.0859)= \textbf{0.1425} $ $>$ 0.1} \\ \hline
+\end{tabular}
+\end{table} 
+
+
+\begin{table}[H]
+\centering
+\caption{Accuracy on Office-31 for the source Webcam and the target Dslr domains.}
+\label{tab:WD}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & W$\rightarrow$D & W$\rightarrow$D & W$\rightarrow$D & W$\rightarrow$D & W$\rightarrow$D \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 99.58 & 100 & 99.79 & 94.38 & 99.37 \\ \hline
+2 & 99.37 & 100 & 99.79 & 94.38 & 98.98 \\ \hline
+3 & 99.37 & 99.79 & 99.79 & 92.92 & 99.17 \\ \hline
+4 & 99.79 & 100 & 99.37 & 92.88 & 99.37 \\ \hline
+5 & 99.58 & 99.79 & 99.58 & 94.79 & 98.96 \\ \hline
+6 & 99.37 & 100 & 99.17 & 93.12 & 99.17 \\ \hline
+7 & 99.37 & 99.58 & 99.17 & 95 & 99.37 \\ \hline
+8 & 99.58 & 99.58 & 99.58 & 92.5 & 99.58 \\ \hline
+9 & 99.79 & 99.79 & 99.17 & 92.92 & 99.17 \\ \hline
+10 & 99.58 & 100 & 99.79 & 92.08 & 99.58 \\ \hline
+11 & 99.37 & 99.79 & 99.17 & 95.83 & 98.96 \\ \hline
+12 & 99.79 & 99.58 & 99.37 & 94.79 & 99.17 \\ \hline
+13 & 99.58 & 100 & 99.58 & 93.96 & 99.37 \\ \hline
+14 & 99.58 & 99.79 & 99.17 & 91.87 & 99.58 \\ \hline
+15 & 99.37 & 99.58 & 98.96 & 92.71 & 99.17 \\ \hline
+avg & 99.54 & \textbf{99.82}$^*$ & 99.43 & 93.61 & 99.26 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon signed-rank test for the source Webcam and the target Dslr domains.}
+\label{tab:WD_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & W$\rightarrow$D \\ \hline
+Source and Dann & \textbf{$p(x > 2.8398) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Mstn and Dann & \textbf{$p(x > 3.2374) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\\hline
+DannFixbi and Dann & \textbf{$p(x > 3.3510)= \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+\end{tabular}
+\end{table} 
+
+\begin{table}[H]
+\centering
+\caption{Accuracy on Office-31 for the source Webcam and the target Amazon domains.}
+\label{tab:WA}
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+   & W$\rightarrow$A & W$\rightarrow$A & W$\rightarrow$A & W$\rightarrow$A & W$\rightarrow$A \\ \hline
+ & Source & Dann & Mstn & Fixbi & DannFixbi \\ \hline
+1 & 64.45 & 65.38 & 51.07 & 30.15 & 63.04 \\ \hline
+2 & 64.17 & 64.91 & 48.58 & 26.03 & 63.29 \\ \hline
+3 & 64.13 & 64.74 & 48.65 & 20.63 & 62.93 \\ \hline
+4 & 62.96 & 64.7 & 50.6 & 23.45 & 62.32 \\ \hline
+5 & 62.25 & 63.42 & 53.09 & 25.82 & 62.04 \\ \hline
+6 & 63.14 & 64.91 & 49.68 & 23.69 & 61.97 \\ \hline
+7 & 64.1 & 64.03 & 52.06 & 35.58 & 62.29 \\ \hline
+8 & 61.75 & 63.81 & 52.49 & 27.7 & 61.54 \\ \hline
+9 & 62.32 & 63.74 & 50.71 & 30.11 & 60.87 \\ \hline
+10 & 62.46 & 64.1 & 51.81 & 24.08 & 61.93 \\ \hline
+11 & 63 & 64.38 & 50.36 & 35.83 & 62.32 \\ \hline
+12 & 62.82 & 62.57 & 49.43 & 30.29 & 62.22 \\ \hline
+13 & 62.78 & 63.99 & 52.88 & 21.16 & 61.4 \\ \hline
+14 & 63.39 & 62.82 & 55.15 & 25.92 & 60.9 \\ \hline
+15 & 61.22 & 63.07 & 50.71 & 25.85 & 61.51 \\ \hline
+avg & 63.00 & \textbf{64.04}$^*$ & 51.15 & 27.09 & 62.04 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Wilcoxon signed-rank test for the source Webcam and the target Amazon domains.}
+\label{tab:WA_wil}
+\begin{tabular}{|l|l|}
+\hline
+ & W$\rightarrow$A \\ \hline
+Source and Dann & \textbf{$p(x > 3.0670) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Mstn and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+Fixbi and Dann & \textbf{$p(x > 3.4078) = \textbf{0.0117}$ $\leq$ 0.025} \\\hline
+DannFixbi and Dann & \textbf{$p(x > 3.4078)= \textbf{0.0117}$ $\leq$ 0.025} \\ \hline
+\end{tabular}
+\end{table} 
+
+\begin{table}[H]
+\caption{Accuracy on Office-31 for all methods.}
+\label{tab:all_avg}
+\hskip-1.2cm \begin{tabular}{|r|c|c|c|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{A$\rightarrow$D} & \multicolumn{1}{c|}{A$\rightarrow$W} & \multicolumn{1}{c|}{D$\rightarrow$W} & \multicolumn{1}{c|}{D$\rightarrow$A} & \multicolumn{1}{c|}{W$\rightarrow$D} & \multicolumn{1}{c|}{W$\rightarrow$A} \\ \hline
+\textbf{Source} & 80.33 $\pm$ 0.8 & 76.49 $\pm$ 0.8 & 95.94 $\pm$ 0.8 & 58.91 $\pm$ 1.2 & 99.54 $\pm$ 0.2 & 63.00 $\pm$ 0.9\\ \hline
+\textbf{Dann} & 82.17 $\pm$ 0.8 & 79.3 $\pm$ 0.8 & 95.84 $\pm$ 0.7 & \textbf{63.07} $\pm$ 0.9& \textbf{99.82} $\pm$ 0.2 & \textbf{64.04} $\pm$ 0.8\\ \hline
+\textbf{Mstn} & 75.83 $\pm$ 1.6 & 71.3 $\pm$ 1.2 & 92.64 $\pm$ 1.5 & 36.14 $\pm$ 3.2 & 99.43 $\pm$ 0.3 & 51.15 $\pm$ 1.8 \\ \hline
+\textbf{Fixbi} & 77.48 $\pm$ 4.6& 82.67 $\pm$ 2.3 & 93.07 $\pm$ 2.0 & 25.05 $\pm$ 8.2 & 93.61 $\pm$ 1.2 & 27.09 $\pm$ 4.6 \\ \hline
+\textbf{DannFixbi} & \textbf{85.56} $\pm$ 1.0 & \textbf{84.27} $\pm$ 1.5 & \textbf{96.85} $\pm$ 0.6 & 62.76 $\pm$ 1.6 & 99.26 $\pm$ 0.2 & 62.04 $\pm$ 0.7 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Average accuracy across all domains}
+\label{tab:tot_avg}
+\begin{tabular}{|r|r|}
+\hline
+                          & \multicolumn{1}{c|}{Avg} \\ \hline
+\textbf{Source}           & 79.04                    \\ \hline
+\textbf{Dann}             & 80.71                    \\ \hline
+\textbf{Mstn} & 71.08                    \\ \hline
+\textbf{Fixbi}            & 66.49                    \\ \hline
+\textbf{DannFixbi}        & \textbf{81.79}           \\ \hline
+\end{tabular}
+\end{table}
+

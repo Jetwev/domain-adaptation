@@ -1,14 +1,22 @@
 \section{Introduction} \label{section: introduction}
 %\lipsum[1-8]
 
-\emph{Articles can be divided into two groups: practical and theoretical. We start with necessary theory to understand some essential definitions and ideas associated with domain adaptation. Then we continue with papers that cover some practical implementations of various approaches.}\\
+\emph{We start with necessary theory and motivation to understand some essential definitions and ideas associated with domain adaptation.}\\
 
-\subsection{Theoretical part}
+\subsection{Theory}
 \input{Chapters/Articles/theory}
 
-\subsection{Practical part}
+\subsection{Motivation}
 
-\textit{In this section, we discuss main purposes, approaches and algorithms that specialists in the field of domain adaptation use in their research. In this section (1.2) all figures are taken from the articles.}\\
+Unsupervised domain adaptation (UDA) is a technique used in machine learning where a model is trained on labeled data from a source domain that has similar characteristics to the target domain, but where the target domain lacks labeled data. The goal is to create a model that will perform well on the target domain despite not having labeled data from that domain. In UDA, the source and target domains are not directly related, so the model has to learn how to generalize across domains.\\
+
+The first reason to be engaged in this field is a scarcity of data. It is known that collecting labeled data in the target domain can be expensive and time-consuming. UDA allows us to use the available labeled data in the associated source domain to learn representations that generalize well to the target domain without requiring additional labeled data. Minimizing the discrepancy between domains, the model can learn more robust and transferable representations, which leads us to the second reason -- improved generalization and domain robustness. The last reason is that UDA allows models to adapt to new environments. I reckon that this is a common situation in real applications, when models are trained on specially prepared data, and then applied to all other data types.
+
+\newpage
+
+\section{State-of-the-art}
+
+\textit{In this section, we discuss main purposes, approaches and algorithms that specialists in the field of domain adaptation use in their research. In this section all figures are taken from the articles.}\\
 
 \input{Chapters/Articles/first}
 
